@@ -32,7 +32,7 @@ option_cb() {
 			[ "$(config_get_bool "$1")" = "1" ] && eval "start_chilli_$chilli_inst=0"
 			;;
 		# boolean settings
-		debug|dhcpbroadcast|nodynip|vlanlocation|locationstopstart|locationcopycalled|locationimmediateupdate|locationopt82|coanoipcheck|noradallow|proxymacaccept|proxyonacct|dhcpmacset|dhcpradius|noc2c|eapolenable|uamanydns|uamanyip|uamnatanyip|nouamsuccess|nowispr1|nowispr2|domaindnslocal|radsec|macauth|macreauth|macauthdeny|macallowlocal|strictmacauth|strictdhcp|ieee8021q|only8021q|radiusoriginalurl|swapoctets|statusfilesave|wpaguests|openidauth|papalwaysok|mschapv2|chillixml|acctupdate|dnsparanoia|seskeepalive|usetap|noarpentries|framedservice|scalewin|redir|injectwispr|redirurl|routeonetone|nousergardendata|uamgardendata|uamotherdata|withunixipc|uamallowpost|redirssl|uamuissl|layer3|patricia|redirdnsreq|dhcpnotidle|ipv6|ipv6only)
+		debug|dhcpbroadcast|nodynip|vlanlocation|locationstopstart|locationcopycalled|locationimmediateupdate|locationopt82|coanoipcheck|noradallow|proxymacaccept|proxyonacct|dhcpmacset|dhcpradius|noc2c|eapolenable|uamanydns|uamanyip|uamnatanyip|nouamsuccess|nowispr1|nowispr2|domaindnslocal|radsec|macauth|macreauth|macauthdeny|macallowlocal|strictmacauth|strictdhcp|ieee8021q|only8021q|radiusoriginalurl|swapoctets|statusfilesave|wpaguests|openidauth|papalwaysok|mschapv2|chillixml|acctupdate|dnsparanoia|seskeepalive|usetap|noarpentries|framedservice|scalewin|redir|injectwispr|redirurl|routeonetone|nousergardendata|uamgardendata|uamotherdata|withunixipc|uamallowpost|redirssl|uamuissl|layer3|patricia|redirdnsreq|dhcpnotidle|ipv6|ipv6only|nochallenge)
 			[ "$2" = "true" -o "$2" = "1" ] && echo "$1" >> "$chilli_conf"
 			;;
 		*)

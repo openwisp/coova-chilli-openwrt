@@ -19,6 +19,6 @@
 +#include <sys/sysinfo.h>
 +#endif
 +
- #elif defined (__FreeBSD__)  || defined (__APPLE__) || defined (__OpenBSD__) || defined (__NetBSD__) 
+ #elif defined (__FreeBSD__)  || defined (__APPLE__) || defined (__OpenBSD__) || defined (__NetBSD__)
  #include <net/if.h>
  #include <net/bpf.h>
