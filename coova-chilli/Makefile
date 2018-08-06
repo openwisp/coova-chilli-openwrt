@@ -8,16 +8,16 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coova-chilli
-PKG_VERSION:=1.3.1.3+5143af0
+PKG_VERSION:=1.4.0+19b20e
 PKG_MAINTAINER:=Jaehoon You <teslamint@gmail.com>
 PKG_LICENSE:=GPL-2.0+
 PKG_LICENSE_FILES:=COPYING
-PKG_RELEASE:=6
+PKG_RELEASE:=7
 
 PKG_SOURCE_PROTO:=git
 PKG_SOURCE_URL:=git://github.com/coova/coova-chilli
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=5143af0ed9ddf6b1ecefa3267dc15dbaa25b8e02
+PKG_SOURCE_VERSION:=19b20e36d0ad0d3954825b067b7d2d4cc6f6ada8
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 
 PKG_INSTALL:=1
@@ -29,6 +29,7 @@ PKG_CONFIG_DEPENDS := \
   COOVACHILLI_DNSLOG \
   COOVACHILLI_UAMDOMAINFILE \
   COOVACHILLI_LARGELIMITS \
+  COOVACHILLI_JSON \
   COOVACHILLI_NOSSL \
   COOVACHILLI_CYASSL \
   COOVACHILLI_OPENSSL
@@ -109,6 +110,7 @@ define Build/Configure
 	$(if $(CONFIG_COOVACHILLI_MINIPORTAL),--enable,--disable)-miniportal \
 	$(if $(CONFIG_COOVACHILLI_USERAGENT),--enable,--disable)-useragent \
 	$(if $(CONFIG_COOVACHILLI_LARGELIMITS),--enable,--disable)-largelimits \
+	$(if $(CONFIG_COOVACHILLI_JSON),--enable-json) \
 	$(if $(CONFIG_COOVACHILLI_UAMDOMAINFILE),--enable,--disable)-uamdomainfile \
 	$(if $(CONFIG_COOVACHILLI_CYASSL),--with,--without)-cyassl \
 	$(if $(CONFIG_COOVACHILLI_OPENSSL),--with,--without)-openssl \
