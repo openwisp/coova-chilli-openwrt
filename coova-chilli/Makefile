@@ -114,6 +114,7 @@ define Build/Configure
 	$(if $(CONFIG_COOVACHILLI_UAMDOMAINFILE),--enable,--disable)-uamdomainfile \
 	$(if $(CONFIG_COOVACHILLI_CYASSL),--with,--without)-cyassl \
 	$(if $(CONFIG_COOVACHILLI_OPENSSL),--with,--without)-openssl \
+	$(if $(or $(CONFIG_COOVACHILLI_OPENSSL), $(CONFIG_COOVACHILLI_CYASSL)),--enable-chilliradsec) \
 	$(if $(CONFIG_PACKAGE_kmod-ipt-coova),--with-nfcoova) \
 	)
 endef
