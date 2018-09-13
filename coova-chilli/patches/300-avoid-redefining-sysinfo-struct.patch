@@ -1,0 +1,13 @@
+--- a/src/system.h
++++ b/src/system.h
+@@ -114,6 +114,10 @@
+ 
+ #ifdef HAVE_SYS_SYSINFO_H
+ #include <sys/sysinfo.h>
++// fixes compile error: redefinition of 'struct sysinfo'
++// seems <linux/sysinfo.h> is being imported twice in OpenWRT 18.06
++// by defining _LINUX_SYSINFO_H we avoid the redefinition
++#define _LINUX_SYSINFO_H
+ #else
+ #ifdef HAVE_LINUX_SYSINFO_H
+ #define _LINUX_KERNEL_H
