@@ -41,6 +41,10 @@ option_cb() {
 	esac
 }
 
+list_cb() {
+	echo "$1=\"$2\"" >> "$chilli_conf"
+}
+
 start_chilli() {
 	local cfg="$1"
 	local start_chilli=$(eval "echo \$start_chilli_$cfg")
