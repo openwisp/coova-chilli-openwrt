@@ -1,15 +1,14 @@
 # CoovaChilli advanced configuration
 
-menu "Configuration"
-	depends on PACKAGE_coova-chilli
+if PACKAGE_coova-chilli
 
 config COOVACHILLI_PROXY
-        bool "Enable support for chilli proxy. Required for AAA Proxy through http"
-        default n
+	bool "Enable support for chilli proxy. Required for AAA Proxy through http"
+	default n
 
 config COOVACHILLI_REDIR
 	bool "Enable support for redir server. Required for uamregex"
-	default n
+	default y
 
 config COOVACHILLI_MINIPORTAL
 	bool "Enable support Coova miniportal"
@@ -17,33 +16,33 @@ config COOVACHILLI_MINIPORTAL
 
 config COOVACHILLI_USERAGENT
 	bool "Enable recording user-agent"
-	default n
+	default y
 
 config COOVACHILLI_UAMDOMAINFILE
 	bool "Enable loading of mass uamdomains from file"
-	default n
+	default y
 
 config COOVACHILLI_LARGELIMITS
 	bool "Enable larger limits for use with non-embedded systems"
 	default n
 
-config COOVACHILLI_JSON
-	bool "Enable CoovaChilli JSON Interface"
+config COOVACHILLI_JSONINTERFACE
+	bool "Enable the JSON interface for the CoovaChilli Controller"
 	default n
 
 choice
 	prompt "SSL library"
-	default COOVACHILLI_NOSSL
+	default COOVACHILLI_OPENSSL
 
 config COOVACHILLI_NOSSL
 	bool "No SSL support"
 
-config COOVACHILLI_CYASSL
-	bool "CyaSSL"
+config COOVACHILLI_WOLFSSL
+	bool "wolfSSL"
 
 config COOVACHILLI_OPENSSL
 	bool "OpenSSL"
 
 endchoice
 
-endmenu
+endif

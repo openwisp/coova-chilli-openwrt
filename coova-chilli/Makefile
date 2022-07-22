@@ -8,30 +8,33 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=coova-chilli
-PKG_VERSION:=1.4.0+4149a5
-PKG_MAINTAINER:=Jaehoon You <teslamint@gmail.com>
-PKG_LICENSE:=GPL-2.0+
-PKG_LICENSE_FILES:=COPYING
-PKG_RELEASE:=7
+PKG_VERSION:=1.6
+PKG_RELEASE:=$(AUTORELEASE)
 
-PKG_SOURCE_PROTO:=git
-PKG_SOURCE_URL:=git://github.com/coova/coova-chilli
-PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_VERSION)
-PKG_SOURCE_VERSION:=4149a5ddfcc666ebbca3fcc9da308e7ff9e433b7
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
+PKG_SOURCE_URL:=https://codeload.github.com/coova/coova-chilli/tar.gz/$(PKG_VERSION)?
+PKG_HASH:=26b2bead6fd9c18eb736fb0a0f8709922de4e4fedee1122193f82706eb2b9305
 
+PKG_MAINTAINER:=Jaehoon You <teslamint@gmail.com>
+PKG_LICENSE:=GPL-2.0-or-later
+PKG_LICENSE_FILES:=COPYING
+
+PKG_FIXUP:=autoreconf
 PKG_INSTALL:=1
+PKG_BUILD_PARALLEL:=0
 
-PKG_CONFIG_DEPENDS := \
-  COOVACHILLI_MINIPORTAL \
-  COOVACHILLI_REDIR \
-  COOVACHILLI_USERAGENT \
-  COOVACHILLI_UAMDOMAINFILE \
+PKG_CONFIG_DEPENDS:= \
+  COOVACHILLI_JSONINTERFACE \
   COOVACHILLI_LARGELIMITS \
-  COOVACHILLI_JSON \
+  COOVACHILLI_MINIPORTAL \
   COOVACHILLI_NOSSL \
-  COOVACHILLI_CYASSL \
-  COOVACHILLI_OPENSSL
+  COOVACHILLI_OPENSSL \
+  COOVACHILLI_PROXY \
+  COOVACHILLI_REDIR \
+  COOVACHILLI_UAMDOMAINFILE \
+  COOVACHILLI_USERAGENT \
+  COOVACHILLI_WOLFSSL \
+  IPV6
 
 include $(INCLUDE_DIR)/package.mk
 include $(INCLUDE_DIR)/kernel.mk
@@ -40,9 +43,11 @@ define Package/coova-chilli
   SUBMENU:=Captive Portals
   SECTION:=net
   CATEGORY:=Network
-  DEPENDS:=+kmod-tun +librt +COOVACHILLI_CYASSL:libcyassl +COOVACHILLI_OPENSSL:libopenssl
+  DEPENDS:=+kmod-tun +librt +COOVACHILLI_MINIPORTAL:haserl \
+  +COOVACHILLI_WOLFSSL:libwolfssl +COOVACHILLI_OPENSSL:libopenssl \
+  +COOVACHILLI_JSONINTERFACE:libjson-c
   TITLE:=Wireless LAN HotSpot controller (Coova Chilli Version)
-  URL:=http://www.coova.org/CoovaChilli
+  URL:=https://coova.github.io/
   MENU:=1
 endef
 
@@ -63,7 +68,7 @@ endef
 define KernelPackage/ipt-coova
   URL:=http://www.coova.org/CoovaChilli
   SUBMENU:=Netfilter Extensions
-  DEPENDS:=coova-chilli +kmod-ipt-core +libxtables
+  DEPENDS:=+kmod-ipt-core +libxtables
   TITLE:=Coova netfilter module
   FILES:=$(PKG_BUILD_DIR)/src/linux/xt_*.$(LINUX_KMOD_SUFFIX)
   AUTOLOAD:=$(call AutoProbe,xt_coova)
@@ -71,13 +76,11 @@ endef
 
 define KernelPackage/ipt-coova/description
 	Netfilter kernel module for CoovaChilli
-	Includes:
-	- coova
 endef
 
 DISABLE_NLS=
 
-TARGET_CFLAGS += $(FPIC)
+TARGET_CFLAGS += $(FPIC) -Wno-error
 
 CONFIGURE_VARS += \
        ARCH="$(LINUX_KARCH)" \
@@ -108,11 +111,12 @@ define Build/Configure
 	$(if $(CONFIG_COOVACHILLI_MINIPORTAL),--enable,--disable)-miniportal \
 	$(if $(CONFIG_COOVACHILLI_USERAGENT),--enable,--disable)-useragent \
 	$(if $(CONFIG_COOVACHILLI_LARGELIMITS),--enable,--disable)-largelimits \
-	$(if $(CONFIG_COOVACHILLI_JSON),--enable-json) \
+	$(if $(CONFIG_COOVACHILLI_JSONINTERFACE),--enable,--disable)-libjson \
+	$(if $(CONFIG_COOVACHILLI_JSONINTERFACE),--enable,--disable)-json \
 	$(if $(CONFIG_COOVACHILLI_UAMDOMAINFILE),--enable,--disable)-uamdomainfile \
-	$(if $(CONFIG_COOVACHILLI_CYASSL),--with,--without)-cyassl \
+	$(if $(CONFIG_IPV6),--with,--without)-ipv6 \
+	$(if $(CONFIG_COOVACHILLI_WOLFSSL),--with,--without)-cyassl \
 	$(if $(CONFIG_COOVACHILLI_OPENSSL),--with,--without)-openssl \
-	$(if $(or $(CONFIG_COOVACHILLI_OPENSSL), $(CONFIG_COOVACHILLI_CYASSL)),--enable-chilliradsec) \
 	$(if $(CONFIG_PACKAGE_kmod-ipt-coova),--with-nfcoova) \
 	)
 endef
@@ -140,8 +144,6 @@ define Package/coova-chilli/install
 	$(INSTALL_BIN) files/chilli.init $(1)/etc/init.d/chilli
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) files/chilli.config $(1)/etc/config/chilli
-	$(INSTALL_DIR) $(1)/lib/firewall
-	$(CP) files/chilli.firewall $(1)/lib/firewall/chilli.sh
 endef
 
 $(eval $(call BuildPackage,coova-chilli))
